@@ -152,7 +152,7 @@ void show_pkt(const u_char *pkt, int len) {
   }
 
 
-  printf("ip prot %d, tos %d, ttl %d, len %d\n", ip->ip_p, ip->ip_tos, ip->ip_ttl, ip->ip_len);
+  printf("ip prot %d, tos %d, ttl %d, len %d\n", ip->ip_p, ip->ip_tos, ip->ip_ttl, ntohs(ip->ip_len));
 
   inet_ntop(AF_INET, &ip->ip_src, ip_src, INET_ADDRSTRLEN);
   inet_ntop(AF_INET, &ip->ip_dst, ip_dst, INET_ADDRSTRLEN);
@@ -255,7 +255,7 @@ int main(int argc, char **argv) {
 #ifdef VERBOSE
       printf("BROADCAST\n\n\n");
 #endif
-      add_broadcast_counter(src_bytes[3], ip_hdr->ip_len);
+      add_broadcast_counter(src_bytes[3], ntohs(ip_hdr->ip_len));
       continue;
     }
 
@@ -263,7 +263,7 @@ int main(int argc, char **argv) {
 #ifdef VERBOSE
       printf("MULTICAST\n\n\n");
 #endif
-      add_multicast_counter(src_bytes[3], ip_hdr->ip_len);
+      add_multicast_counter(src_bytes[3], ntohs(ip_hdr->ip_len));
       continue;
     }
 
@@ -271,12 +271,12 @@ int main(int argc, char **argv) {
 #ifdef VERBOSE
       printf("RX %d\n\n\n", dst_bytes[3]);
 #endif
-      add_rx_counter(dst_bytes[3], ip_hdr->ip_len);
+      add_rx_counter(dst_bytes[3], ntohs(ip_hdr->ip_len));
     } else {
 #ifdef VERBOSE
       printf("TX %d\n\n\n", src_bytes[3]);
 #endif
-      add_tx_counter(src_bytes[3], ip_hdr->ip_len);
+      add_tx_counter(src_bytes[3], ntohs(ip_hdr->ip_len));
     }
 
 #ifdef VERBOSE
